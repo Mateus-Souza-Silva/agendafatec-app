@@ -15,7 +15,7 @@ export class ContatoComponent implements OnInit {
 
   formulario!: FormGroup;
   contatos: Contato[] = [];
-  colunas = ['id', 'nome', 'email', 'favorito', 'excluir'];
+  colunas = ['foto', 'nome', 'email', 'favorito', 'excluir'];
 
   constructor(
     private service: ContatoService,
@@ -63,6 +63,18 @@ export class ContatoComponent implements OnInit {
   delete(contato: Contato){
     if (window.confirm('Deseja realmente exlcuir esse contato?')){
       this.service.delete(contato).subscribe(resposta =>{
+        this.findAll();
+      })
+    }
+  }
+
+  uploadFoto(event: any, contato: Contato){
+    const files = event.target.files;
+    if (files) {
+      const foto = files[0];
+      const formData: FormData = new FormData();
+      formData.append("foto", foto);
+      this.service.upload(contato, formData).subscribe(response => {
         this.findAll();
       })
     }
